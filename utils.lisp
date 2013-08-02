@@ -14,15 +14,15 @@
 			:preserve-uri t
 			:want-stream t)))
 
-(defmacro construct_url (lookup-or-search params &optional (type "track"))
+(defmacro construct-url (lookup-or-search params &optional (type "track"))
   `(format nil
-	   ,(case lookup-or-search
-		  ((lookup)
-		   *lookup*
-		    (drakma:url-encode params :utf-8))
-		  ((search)
-		   *search*
-		    type
-		    (drakma:url-encode params :utf-8)))))
+	   ,@(case lookup-or-search
+		   ((lookup)
+		    (list *lookup*
+			  (drakma:url-encode params :utf-8)))
+		   ((search)
+		    (list *search*
+			  type
+			  (drakma:url-encode params :utf-8))))))
 
 
