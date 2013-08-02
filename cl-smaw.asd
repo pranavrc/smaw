@@ -13,4 +13,4 @@
   ((:file "package")
    (:file "utils")
    (:file "cl-smaw"))
-   :depends-on (drakma yason))
+   :depends-on (drakma yason cl-interpol))

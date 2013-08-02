@@ -1,15 +1,12 @@
 (in-package :cl-smaw)
 
-(defparameter *lookup* "http://ws.spotify.com/lookup/1/.json?uri=~a")
-(defparameter *search* "http://ws.spotify.com/search/1/~a.json?q=~a")
+(enable-interpol-syntax)
 
-(defmacro construct-url (lookup-or-search params &optional (type "track"))
-  `(format nil
-           ,@(case lookup-or-search
-                   ((lookup)
-                    (list *lookup*
-                          (url-encode params :utf-8)))
-                   ((search)
-                    (list *search*
-                          type
-                          (url-encode params :utf-8))))))
+(defun construct-url (search-or-lookup parameters &optional (type "track"))
+  (let* ((encoded-parameters (url-encode parameters :utf-8))
+         (search-url #?"http://ws.spotify.com/search/1/${type}.json?q=${encoded-parameters}")
+         (lookup-url #?"http://ws.spotify.com/lookup/1/.json?uri=${encoded-parameters}"))
+    (case search-or-lookup
+      (search search-url)
+      (lookup lookup-url)
+      (otherwise (error "Specify either 'search or 'lookup")))))
