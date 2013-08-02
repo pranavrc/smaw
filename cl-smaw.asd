@@ -11,5 +11,6 @@
   :serial t
   :components
   ((:file "package")
-   (:file "utils"))
+   (:file "utils")
+   (:file "cl-smaw"))
    :depends-on (drakma yason))
