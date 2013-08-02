@@ -6,7 +6,7 @@
 (defsystem cl-smaw
   :name "sudoku-solver"
   :author "Pranav Ravichandran"
-  :description "CL bindings for the Spotify API"
+  :description "Common Lisp Wrapper for the Spotify Metadata API."
   :license "MIT"
   :serial t
   :components
