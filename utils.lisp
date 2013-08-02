@@ -24,5 +24,3 @@
 		    (list *search*
 			  type
 			  (drakma:url-encode params :utf-8))))))
-
-
