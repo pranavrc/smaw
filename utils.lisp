@@ -1,5 +1,6 @@
 (in-package :cl-smaw)
 
+;; Get JSON response from an URL.
 (defun get-json-response (url)
   (parse
    (http-request url
@@ -7,6 +8,7 @@
                  :preserve-uri t
                  :want-stream t)))
 
+;; Extract Name, URI and Artist values from the JSON.
 (defun extract-values (json type &optional (detailed nil))
   (let* ((list-of-tracks (gethash type json)))
     (if detailed
