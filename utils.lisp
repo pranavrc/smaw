@@ -9,9 +9,9 @@
                  :want-stream t)))
 
 ;; Extract Name, URI and Artist values from the JSON.
-(defun extract-values (json type &optional (detailed nil))
+(defun extract-values (json type &optional (pretty nil))
   (let* ((list-of-tracks (gethash type json)))
-    (if detailed
+    (if pretty
 	(mapcar #'(lambda (track artists uri) (format nil "~a, By: ~a, URI: ~a"
 						      track 
 						      (format nil "~{~a~^ and ~}" artists)
@@ -21,4 +21,9 @@
 							  (gethash "name" each)) each-list))
 			(mapcar #'(lambda (each) (gethash "artists" each)) list-of-tracks))
 		(mapcar #'(lambda (each) (gethash "href" each)) list-of-tracks))
-	(mapcar #'(lambda (each) (gethash "href" each)) list-of-tracks))))
+	(mapcar #'(lambda (each) (list :track (gethash "name" each)
+				       :artists 
+				       (mapcar #'(lambda (each-list)
+						   (gethash "name" each-list))
+					       (gethash "artists" each))
+				       :uri (gethash "href" each))) list-of-tracks))))
