@@ -12,5 +12,5 @@
   :components
   ((:file "package")
    (:file "utils")
-   (:file "cl-smaw"))
+   (:file "search"))
    :depends-on (drakma yason cl-interpol))
