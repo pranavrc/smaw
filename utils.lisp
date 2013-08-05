@@ -28,7 +28,7 @@
 (defun make-plist (json-object &rest keys)
   (let* ((list-object ()))
     (loop for each-key in keys do
-	 (setf (getf list-object each-key) 
+	 (setf (getf list-object each-key)
 	       (case each-key
 		 (:artists (mapcar #'(lambda (each) (make-plist each :href :name))
 				   (gethash "artists" json-object)))
@@ -39,11 +39,11 @@
     list-object))
 
 ;; Album search and lookup.
-(defun album-search (search-term) 
+(defun album-search (search-term)
   (mapcar #'(lambda (each) (album-search-parser each))
-	  (gethash "albums" 
+	  (gethash "albums"
 		   (get-json-response (construct-url 'search search-term "album")))))
-(defun album-lookup (lookup-term) 
+(defun album-lookup (lookup-term)
   (album-lookup-parser (gethash "album"
 				(get-json-response (construct-url 'album-lookup lookup-term "album")))))
 
@@ -52,7 +52,7 @@
   (mapcar #'(lambda (each) (artist-search-parser each))
 	  (gethash "artists"
 		   (get-json-response (construct-url 'search search-term "artist")))))
-(defun artist-lookup (lookup-term) 
+(defun artist-lookup (lookup-term)
   (artist-lookup-parser (gethash "artist"
 				 (get-json-response (construct-url 'artist-lookup lookup-term "artist")))))
 

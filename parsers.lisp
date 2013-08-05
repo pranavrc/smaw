@@ -36,7 +36,7 @@
 
 ;; Parses information from a JSON response for track lookups.
 (defun track-lookup-parser (track-lookup-object)
-  (let* ((toplevel-keys (make-plist track-lookup-object :name :available 
+  (let* ((toplevel-keys (make-plist track-lookup-object :name :available
 				    :popularity :length :href :track-number
 				    :external-ids :artists :availability)))
     (setf (getf toplevel-keys :album)
