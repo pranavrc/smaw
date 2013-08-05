@@ -1,65 +1,37 @@
 (in-package :cl-smaw)
 
-;; Extract Name, URI and Artist values from the JSON.
-(defun album-and-track-parser (json albums-or-tracks &optional (pretty nil))
-  (let* ((list-of-tracks (gethash albums-or-tracks json)))
-    (if pretty
-	(mapcar #'(lambda (track artists uri) (format nil "~a, By: ~a, URI: ~a"
-						      track
-						      (format nil "~{~a~^ and ~}" artists)
-						      uri))
-		(mapcar #'(lambda (each) (gethash "name" each)) list-of-tracks)
-		(mapcar #'(lambda (each-list) (mapcar #'(lambda (each)
-							  (gethash "name" each)) each-list))
-			(mapcar #'(lambda (each) (gethash "artists" each)) list-of-tracks))
-		(mapcar #'(lambda (each) (gethash "href" each)) list-of-tracks))
-	(mapcar #'(lambda (each) (list :track (gethash "name" each)
-				       :artists
-				       (mapcar #'(lambda (each-list)
-						   (gethash "name" each-list))
-					       (gethash "artists" each))
-				       :uri (gethash "href" each))) list-of-tracks))))
-
 ;; Parses information from a JSON response for album queries.
 (defun album-search-parser (album-search-object)
-  (list :name (gethash "name" album-search-object)
-	:popularity (gethash "popularity" album-search-object)
-	:external-ids (mapcar #'(lambda (each) (list
-						:type (gethash "type" each)
-						:id (gethash "id" each)))
-			      (gethash "external-ids" album-search-object))
-	:href (gethash "href" album-search-object)
-	:artists (mapcar #'(lambda (each) (list
-					   :href (gethash "href" each)
-					   :name (gethash "name" each)))
-			 (gethash "artists" album-search-object))
-	:availability (list :territories (gethash "territories"
-						  (gethash "availability" album-search-object)))))
+  (let* ((toplevel-keys (make-plist album-search-object
+				    :name :popularity :href)))
+    (setf (getf toplevel-keys :external-ids)
+	  (mapcar #'(lambda (each) (make-plist each :type :id))
+		  (gethash "external-ids" album-search-object))
+	  (getf toplevel-keys :artists)
+	  (mapcar #'(lambda (each) (make-plist each :href :name))
+		  (gethash "artists" album-search-object))
+	  (getf toplevel-keys :availability)
+	  (make-plist (gethash "availability" album-search-object) :territories))
+    toplevel-keys))
 
 ;; Parses information from a JSON response for track queries.
 (defun track-search-parser (track-search-object)
-  (list :name (gethash "name" track-search-object)
-	:album (let* ((album-key (gethash "album" track-search-object)))
-		 (list :name (gethash "name" album-key)
-		       :released (gethash "released" album-key)
-		       :href (gethash "href" album-key)
-		       :availability (list :territories (gethash "territories"
-								 (gethash "availability" album-key)))))
-	:popularity (gethash "popularity" track-search-object)
-	:external-ids (mapcar #'(lambda (each) (list
-						:type (gethash "type" each)
-						:id (gethash "id" each)))
-			      (gethash "external-ids" track-search-object))
-	:length (gethash "length" track-search-object)
-	:href (gethash "href" track-search-object)
-	:artists (mapcar #'(lambda (each) (list
-					   :href (gethash "href" each)
-					   :name (gethash "name" each)))
-			 (gethash "artists" track-search-object))
-	:track-number (gethash "track-number" track-search-object)))
+  (let* ((toplevel-keys (make-plist track-search-object
+				    :name :popularity :length :href :track-number)))
+    (setf (getf toplevel-keys :album)
+	  (let* ((album-key (gethash "album" track-search-object)))
+	    (let* ((album-properties (make-plist album-key :name :released :href)))
+	      (setf (getf album-properties :availability)
+		    (make-plist (gethash "availability" album-key) :territories))
+	      album-properties))
+	  (getf toplevel-keys :external-ids)
+	  (mapcar #'(lambda (each) (make-plist each :type :id))
+		  (gethash "external-ids" track-search-object))
+	  (getf toplevel-keys :artists)
+	  (mapcar #'(lambda (each) (make-plist each :href :name))
+		  (gethash "artists" track-search-object)))
+    toplevel-keys))
 
 ;; Parses information from a JSON response for artist queries.
 (defun artist-search-parser (artist-search-object)
-  (list :name (gethash "name" artist-search-object)
-	:popularity (gethash "popularity" artist-search-object)
-	:href (gethash "href" artist-search-object)))
+  (make-plist artist-search-object :name :popularity :href))
