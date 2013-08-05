@@ -20,6 +20,13 @@
       (lookup lookup-url)
       (otherwise (error "Specify either 'search or 'lookup symbol.")))))
 
+;; Make a property list out of a list of keys in a JSON object.
+(defun make-plist (json-object &rest keys)
+  (let* ((list-object ()))
+    (loop for each-key in keys do
+	 (setf (getf list-object each-key) (gethash (string each-key) json-object)))
+    list-object))
+
 ;; Album search and lookup.
 (defun album-search (search-term) (construct-url 'search search-term "album"))
 (defun album-lookup (lookup-term) (construct-url 'lookup lookup-term "album"))
