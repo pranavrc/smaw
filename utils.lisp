@@ -39,13 +39,28 @@
     list-object))
 
 ;; Album search and lookup.
-(defun album-search (search-term) (construct-url 'search search-term "album"))
-(defun album-lookup (lookup-term) (construct-url 'album-lookup lookup-term "album"))
+(defun album-search (search-term) 
+  (mapcar #'(lambda (each) (album-search-parser each))
+	  (gethash "albums" 
+		   (get-json-response (construct-url 'search search-term "album")))))
+(defun album-lookup (lookup-term) 
+  (album-lookup-parser (gethash "album"
+				(get-json-response (construct-url 'album-lookup lookup-term "album")))))
 
 ;; Artist search and lookup.
-(defun artist-search (search-term) (construct-url 'search search-term "artist"))
-(defun artist-lookup (lookup-term) (construct-url 'artist-lookup lookup-term "artist"))
+(defun artist-search (search-term)
+  (mapcar #'(lambda (each) (artist-search-parser each))
+	  (gethash "artists"
+		   (get-json-response (construct-url 'search search-term "artist")))))
+(defun artist-lookup (lookup-term) 
+  (artist-lookup-parser (gethash "artist"
+				 (get-json-response (construct-url 'artist-lookup lookup-term "artist")))))
 
 ;; Track search and lookup.
-(defun track-search (search-term) (construct-url 'search search-term))
-(defun track-lookup (lookup-term) (construct-url 'track-lookup lookup-term))
+(defun track-search (search-term)
+  (mapcar #'(lambda (each) (track-search-parser each))
+	  (gethash "tracks"
+		   (get-json-response (construct-url 'search search-term)))))
+(defun track-lookup (lookup-term)
+  (track-lookup-parser (gethash "track"
+				(get-json-response (construct-url 'track-lookup lookup-term)))))
