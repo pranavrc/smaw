@@ -21,6 +21,19 @@
 (defun artist-search-parser (artist-search-object)
   (make-plist artist-search-object :name :popularity :href))
 
+;; Parses information from a JSON response for album lookups.
+
+(defun album-lookup-parser (album-lookup-object)
+  (let* ((toplevel-keys (make-plist album-lookup-object :artist-id :name :artist
+				    :external-ids :released :href :availability)))
+    (setf (getf toplevel-keys :tracks)
+	  (mapcar #'(lambda (each) (make-plist each
+					       :available :track-number :popularity
+					       :external-ids :length :href
+					       :artists :disc-number :name))
+		  (gethash "tracks" album-lookup-object)))
+    toplevel-keys))
+
 ;; Parses information from a JSON response for track lookups.
 (defun track-lookup-parser (track-lookup-object)
   (let* ((toplevel-keys (make-plist track-lookup-object :name :available 
@@ -29,4 +42,14 @@
     (setf (getf toplevel-keys :album)
 	  (make-plist (gethash "album" track-lookup-object)
 		      :name :released :href))
+    toplevel-keys))
+
+;; Parses information from a JSON response for artist lookups.
+(defun artist-lookup-parser (artist-lookup-object)
+  (let* ((toplevel-keys (make-plist artist-lookup-object :name :href)))
+    (setf (getf toplevel-keys :albums)
+	  (mapcar #'(lambda (each) (make-plist (gethash "album" each)
+					       :artist-id :name :artist :external-ids
+					       :released :href :availability))
+		  (gethash "albums" artist-lookup-object)))
     toplevel-keys))
