@@ -24,7 +24,7 @@
 (defun make-plist (json-object &rest keys)
   (let* ((list-object ()))
     (loop for each-key in keys do
-	 (setf (getf list-object each-key) (gethash (string each-key) json-object)))
+	 (setf (getf list-object each-key) (gethash (string-downcase (string each-key)) json-object)))
     list-object))
 
 ;; Album search and lookup.
