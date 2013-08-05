@@ -14,10 +14,14 @@
 (defun construct-url (search-or-lookup parameters &optional (type "track"))
   (let* ((encoded-parameters (url-encode parameters :utf-8))
          (search-url #?"http://ws.spotify.com/search/1/${type}.json?q=${encoded-parameters}")
-         (lookup-url #?"http://ws.spotify.com/lookup/1/.json?uri=${encoded-parameters}"))
+	 (track-lookup-url #?"http://ws.spotify.com/lookup/1/.json?uri=${encoded-parameters}")
+         (album-lookup-url #?"http://ws.spotify.com/lookup/1/.json?uri=${encoded-parameters}&extras=trackdetail")
+	 (artist-lookup-url #?"http://ws.spotify.com/lookup/1/.json?uri=${encoded-parameters}&extras=albumdetail"))
     (case search-or-lookup
       (search search-url)
-      (lookup lookup-url)
+      (track-lookup track-lookup-url)
+      (album-lookup album-lookup-url)
+      (artist-lookup artist-lookup-url)
       (otherwise (error "Specify either 'search or 'lookup symbol.")))))
 
 ;; Make a property list out of a list of keys in a JSON object.
@@ -36,12 +40,12 @@
 
 ;; Album search and lookup.
 (defun album-search (search-term) (construct-url 'search search-term "album"))
-(defun album-lookup (lookup-term) (construct-url 'lookup lookup-term "album"))
+(defun album-lookup (lookup-term) (construct-url 'album-lookup lookup-term "album"))
 
 ;; Artist search and lookup.
 (defun artist-search (search-term) (construct-url 'search search-term "artist"))
-(defun artist-lookup (lookup-term) (construct-url 'lookup lookup-term "artist"))
+(defun artist-lookup (lookup-term) (construct-url 'artist-lookup lookup-term "artist"))
 
 ;; Track search and lookup.
 (defun track-search (search-term) (construct-url 'search search-term))
-(defun track-lookup (lookup-term) (construct-url 'lookup lookup-term))
+(defun track-lookup (lookup-term) (construct-url 'track-lookup lookup-term))
