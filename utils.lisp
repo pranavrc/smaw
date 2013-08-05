@@ -24,7 +24,14 @@
 (defun make-plist (json-object &rest keys)
   (let* ((list-object ()))
     (loop for each-key in keys do
-	 (setf (getf list-object each-key) (gethash (string-downcase (string each-key)) json-object)))
+	 (setf (getf list-object each-key) 
+	       (case each-key
+		 (:artists (mapcar #'(lambda (each) (make-plist each :href :name))
+				   (gethash "artists" json-object)))
+		 (:external-ids (mapcar #'(lambda (each) (make-plist each :type :id))
+					(gethash "external-ids" json-object)))
+		 (:availability (make-plist (gethash "availability" json-object) :territories))
+		 (otherwise (gethash (string-downcase (string each-key)) json-object)))))
     list-object))
 
 ;; Album search and lookup.
