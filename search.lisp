@@ -21,45 +21,45 @@
 				       :uri (gethash "href" each))) list-of-tracks))))
 
 ;; Parses information from a JSON response for album queries.
-(defun album-parser (album-object)
-  (list :name (gethash "name" album-object)
-	:popularity (gethash "popularity" album-object)
+(defun album-search-parser (album-search-object)
+  (list :name (gethash "name" album-search-object)
+	:popularity (gethash "popularity" album-search-object)
 	:external-ids (mapcar #'(lambda (each) (list
 						:type (gethash "type" each)
 						:id (gethash "id" each)))
-			      (gethash "external-ids" album-object))
-	:href (gethash "href" album-object)
+			      (gethash "external-ids" album-search-object))
+	:href (gethash "href" album-search-object)
 	:artists (mapcar #'(lambda (each) (list
 					   :href (gethash "href" each)
 					   :name (gethash "name" each)))
-			 (gethash "artists" album-object))
+			 (gethash "artists" album-search-object))
 	:availability (list :territories (gethash "territories"
-						  (gethash "availability" album-object)))))
+						  (gethash "availability" album-search-object)))))
 
 ;; Parses information from a JSON response for track queries.
-(defun track-parser (track-object)
-  (list :name (gethash "name" track-object)
-	:album (let* ((album-key (gethash "album" track-object)))
+(defun track-search-parser (track-search-object)
+  (list :name (gethash "name" track-search-object)
+	:album (let* ((album-key (gethash "album" track-search-object)))
 		 (list :name (gethash "name" album-key)
 		       :released (gethash "released" album-key)
 		       :href (gethash "href" album-key)
 		       :availability (list :territories (gethash "territories"
 								 (gethash "availability" album-key)))))
-	:popularity (gethash "popularity" track-object)
+	:popularity (gethash "popularity" track-search-object)
 	:external-ids (mapcar #'(lambda (each) (list
 						:type (gethash "type" each)
 						:id (gethash "id" each)))
-			      (gethash "external-ids" track-object))
-	:length (gethash "length" track-object)
-	:href (gethash "href" track-object)
+			      (gethash "external-ids" track-search-object))
+	:length (gethash "length" track-search-object)
+	:href (gethash "href" track-search-object)
 	:artists (mapcar #'(lambda (each) (list
 					   :href (gethash "href" each)
 					   :name (gethash "name" each)))
-			 (gethash "artists" track-object))
-	:track-number (gethash "track-number" track-object)))
+			 (gethash "artists" track-search-object))
+	:track-number (gethash "track-number" track-search-object)))
 
 ;; Parses information from a JSON response for artist queries.
-(defun artist-parser (artist-object)
-  (list :name (gethash "name" artist-object)
-	:popularity (gethash "popularity" artist-object)
-	:href (gethash "href" artist-object)))
+(defun artist-search-parser (artist-search-object)
+  (list :name (gethash "name" artist-search-object)
+	:popularity (gethash "popularity" artist-search-object)
+	:href (gethash "href" artist-search-object)))
