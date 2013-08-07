@@ -42,11 +42,11 @@
 (defun format-plist (plist &optional (include-keys? t) &rest keys-to-include)
   "Recursive function to pretty-print the plist returned by searches and lookups."
   (loop for (key value) on plist by #'cddr
-     when (member key 
+     when (member key
 		  (if keys-to-include
 		      keys-to-include
 		      plist) :test #'equal)
-     collect (cond 
+     collect (cond
 	       ((member key '(:album :availability) :test #'equal)
 		(if include-keys?
 		    (format nil "~a:~%~3,8@T~a" (string key) (format-plist value include-keys?))
