@@ -55,7 +55,8 @@
 
 	       ((member key '(:external-ids :artists :tracks) :test #'equal)
 		(if include-keys?
-		    (format nil "~a:~%~3,8@T~a" (string key) (mapcar #'(lambda (each) (format-plist each include-keys?)) value))
+		    (format nil "~a:~%~3,8@T~a" (string key)
+			    (mapcar #'(lambda (each) (format-plist each include-keys?)) value))
 		    (format nil "~a~%" (mapcar #'(lambda (each) (format-plist each include-keys?)) value))))
 
 	       (t
