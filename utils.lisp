@@ -47,7 +47,6 @@
 		      keys-to-include
 		      plist) :test #'equal)
      collect (cond
-
 	       ((member key '(:album :availability) :test #'equal)
 		(if include-keys?
 		    (format nil "~a:~%~3,8@T~a" (string key) (format-plist value include-keys?))
