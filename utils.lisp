@@ -39,6 +39,26 @@
                  (otherwise (gethash (string-downcase (string key)) json-object)))))
     list-object))
 
+(defun format-plist (plist &optional (include-keys? t) &rest keys-to-include)
+  "Recursive function to pretty-print the plist returned by searches and lookups."
+  (loop for (key value) on plist by #'cddr
+     when (member key 
+		  (if keys-to-include
+		      keys-to-include
+		      plist) :test #'equal)
+     collect (cond 
+	       ((member key '(:album :availability) :test #'equal)
+		(if include-keys?
+		    (format nil "~a:~%~3,8@T~a" (string key) (format-plist value include-keys?))
+		    (format nil "~a" (format-plist value include-keys?))))
+	       ((member key '(:external-ids :artists :tracks) :test #'equal)
+		(if include-keys?
+		    (format nil "~a:~%~3,8@T~a" (string key) (mapcar #'(lambda (each) (format-plist each include-keys?)) value))
+		    (format nil "~a~%" (mapcar #'(lambda (each) (format-plist each include-keys?)) value))))
+	       (t
+		(if include-keys?
+		    (format nil "~a: ~a" key value)
+		    (format nil "~a" value))))))
 
 (defun album-search (search-term)
   (mapcar #'(lambda (each) (album-search-parser each))
