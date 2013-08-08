@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Check that album out.</title>
+		<link rel="stylesheet" href="/index.css">
+		<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+		<meta charset="utf-8" />
+	</head>
+	<body>
+		<div id="description">
+			<h1>album.onloop</h1>
+
+			<p id="exp">Search Spotify from the URL.</p>
+
+			<hr />
+
+			<div id="howto">
+				<p>
+				Album search: http://s.onloop.net/album/<form id="requests" onsubmit="return formSubmit('album');" style="display:inline!important;"><input style="width:250px;" id="api" type="text" placeholder="Album name (eg: Fragile by Yes)" /></form><br />
+
+				Artist search: http://s.onloop.net/artist/<form id="requests" onsubmit="return formSubmit('artist');" style="display:inline!important;"><input style="width:250px;" id="api" type="text" placeholder="Artist name (eg: Yes)" /></form><br />
+
+				Track search: http://s.onloop.net/track/<form id="requests" onsubmit="return formSubmit('track');" style="display:inline!important;"><input style="width:250px;" id="api" type="text" placeholder="Track name (eg: Heart of the Sunrise)" /></form>
+				</p>
+			</div>
+
+			<hr />
+
+			<p id="footer">
+			&copy; <a href="http://onloop.net/" target="_blank">Pranav Ravichandran</a>.
+
+			With Common Lisp, cl-smaw and the Spotify Metadata API.
+			</p>
+		</div>
+
+		<a href="https://github.com/pranavrc/cl-smaw/"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+
+		<script>
+			window.onload = function() {
+				document.getElementById('api').focus();
+			}
+
+			function formSubmit(type) {
+				var entry = document.getElementById('api').value;
+				entry.replace(/\s+/g, '%20');
+				if (!entry) return;
+				window.location.href = type + '/' + entry;
+				return false;
+			}
+		</script>
+	</body>
+</html>
