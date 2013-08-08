@@ -13,4 +13,4 @@
   ((:file "package")
    (:file "utils")
    (:file "parsers"))
-   :depends-on (drakma yason cl-interpol))
+   :depends-on (drakma yason cl-interpol cl-ppcre))

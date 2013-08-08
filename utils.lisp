@@ -49,19 +49,27 @@
      collect (cond
 	       ((member key '(:album :availability) :test #'equal)
 		(if include-keys?
-		    (format nil "~a:~%~3,8@T~a" (string key) (format-plist value include-keys?))
+		    (format nil "~a:~a" (string key) (format-plist value include-keys?))
 		    (format nil "~a" (format-plist value include-keys?))))
 
-	       ((member key '(:external-ids :artists :tracks) :test #'equal)
+	       ((member key '(:external-ids :artists :tracks :albums) :test #'equal)
 		(if include-keys?
-		    (format nil "~a:~%~3,8@T~a" (string key)
+		    (format nil "~a:~a" (string key)
 			    (mapcar #'(lambda (each) (format-plist each include-keys?)) value))
-		    (format nil "~a~%" (mapcar #'(lambda (each) (format-plist each include-keys?)) value))))
+		    (format nil "~a" (mapcar #'(lambda (each) (format-plist each include-keys?)) value))))
 
 	       (t
 		(if include-keys?
-		    (format nil "~a: ~a" key value)
+		    (format nil "~a:~a" key value)
 		    (format nil "~a" value))))))
+
+(defun filter-results (results &rest filters)
+  "Generates a list of results that match only the specified results (key-value pairs)."
+  (remove nil
+	  (loop for each-result in results collect
+	       (loop for (key value) on filters by #'cddr
+		  when (string-equal value (getf each-result key))
+		  do (return each-result)))))
 
 (defun album-search (search-term)
   (mapcar #'(lambda (each) (album-search-parser each))
