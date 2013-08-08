@@ -102,3 +102,8 @@
   (track-lookup-parser (gethash "track"
                                 (get-json-response
                                  (construct-url 'track-lookup lookup-term)))))
+
+(defun generate-embed-html (uri &key (width 300) (height 380))
+  "Generate HTML markup for embedding spotify widgets."
+  (format nil "<iframe src=\"https://embed.spotify.com/?uri=~a\" width=\"~d\" height=\"~d\"
+frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
