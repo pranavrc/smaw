@@ -71,6 +71,21 @@
 		  when (string-equal value (getf each-result key))
 		  do (return each-result)))))
 
+(defun api-service (service query)
+  "Rudimentary exception handling for all services."
+  (handler-case
+      (progn
+	(case service
+	  (album-search (album-search query))
+	  (artist-search (artist-search query))
+	  (track-search (track-search query))
+	  (album-lookup (album-lookup query))
+	  (artist-lookup (artist-lookup query))
+	  (track-lookup (track-lookup query))
+	  (otherwise (print "Specify one of '(album-search artist-search track-search
+album-lookup artist-lookup track-lookup)"))))
+    (error (e) (print e))))
+
 (defun album-search (search-term)
   (mapcar #'(lambda (each) (album-search-parser each))
           (gethash "albums"
