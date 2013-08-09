@@ -36,10 +36,15 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 	 (:i (who:str value)))))
 
 (defun entry (category plist)
-  (who:with-html-output-to-string (*standard-output* nil)
-    (:p (who:str (concatenate 'string
-			      (who:with-html-output-to-string (*standard-output* nil) (:b (who:str (string-capitalize category))))
-			      " " (getf plist category))))))
+  (if (typep (getf plist category) 'list)
+      (string-from-plist category plist)
+      (who:with-html-output-to-string (*standard-output* nil)
+	(:p (who:str (concatenate 'string
+				  (who:with-html-output-to-string (*standard-output* nil) (:b (who:str (string-capitalize category))))
+				  " " 
+				  (if (typep (getf plist category) 'number)
+				      (write-to-string (getf plist category))
+				      (string (getf plist category)))))))))
 
 (defun string-from-plists (category plist)
   (concatenate 'string
