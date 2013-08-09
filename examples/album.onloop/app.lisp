@@ -40,19 +40,28 @@
 		     (cond
 		       ((string= type "album")
 			(if (second params)
-			    (cl-smaw::album-lookup-html (cl-smaw::album-lookup (getf (nth (- (parse-integer (second params)) 1)
-											  (cl-smaw::album-search (first params))) :href)))
-			    (cl-smaw::album-lookup-html (cl-smaw::album-lookup (getf (first (cl-smaw::album-search (first params))) :href)))))
+			    (cl-smaw::album-lookup-html
+			     (cl-smaw::album-lookup 
+			      (getf (nth (- (parse-integer (second params)) 1)
+					 (cl-smaw::album-search (first params))) :href)))
+			    (cl-smaw::album-lookup-html
+			     (cl-smaw::album-lookup (getf (first
+							   (cl-smaw::album-search (first params))) :href)))))
 		       ((string= type "artist")
 			(if (second params)
-			    (cl-smaw::artist-lookup-html (cl-smaw::artist-lookup (getf (nth (- (parse-integer (second params)) 1)
-											    (cl-smaw::artist-search (first params))) :href)))
-			    (cl-smaw::artist-lookup-html (cl-smaw::artist-lookup (getf (first (cl-smaw::artist-search (first params))) :href)))))
+			    (cl-smaw::artist-lookup-html
+			     (cl-smaw::artist-lookup (getf (nth (- (parse-integer (second params)) 1)
+								(cl-smaw::artist-search (first params))) :href)))
+			    (cl-smaw::artist-lookup-html (cl-smaw::artist-lookup
+							  (getf (first (cl-smaw::artist-search (first params)))
+								:href)))))
 		       ((string= type "track")
 			(if (second params)
-			    (cl-smaw::track-lookup-html (cl-smaw::track-lookup (getf (nth (- (parse-integer (second params)) 1)
-											  (cl-smaw::track-search (first params))) :href)))
-			    (cl-smaw::track-lookup-html (cl-smaw::track-lookup (getf (first (cl-smaw::track-search (first params))) :href)))))
+			    (cl-smaw::track-lookup-html (cl-smaw::track-lookup
+							 (getf (nth (- (parse-integer (second params)) 1)
+								    (cl-smaw::track-search (first params))) :href)))
+			    (cl-smaw::track-lookup-html (cl-smaw::track-lookup
+							 (getf (first (cl-smaw::track-search (first params))) :href)))))
 		       (t "Invalid URL."))))
 	     (error (e) "Oops, something went wrong."))))))
 
