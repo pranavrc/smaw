@@ -55,9 +55,7 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 		    do (format s
 			       (with-output-to-string (d)
 				 (loop for (key value) on each-plist by #'cddr
-				    do (format d
-					       (concatenate 'string
-							    (entry key each-plist) value) "<br />"))))))
+				    do (format d (entry key each-plist)))))))
 	       "</div>"))
 
 (defun string-from-plist (category plist)
