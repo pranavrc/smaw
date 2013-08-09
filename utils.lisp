@@ -43,47 +43,46 @@
   "Recursive function to pretty-print the plist returned by searches and lookups."
   (loop for (key value) on plist by #'cddr
      when (member key
-		  (if keys-to-include
-		      keys-to-include
-		      plist) :test #'equal)
+                  (if keys-to-include
+                      keys-to-include
+                      plist) :test #'equal)
      collect (cond
-	       ((member key '(:album :availability) :test #'equal)
-		(if include-keys?
-		    (format nil "~a:~a" (string key) (format-plist value include-keys?))
-		    (format nil "~a" (format-plist value include-keys?))))
+               ((member key '(:album :availability) :test #'equal)
+                (if include-keys?
+                    (format nil "~a:~a" (string key) (format-plist value include-keys?))
+                    (format nil "~a" (format-plist value include-keys?))))
 
-	       ((member key '(:external-ids :artists :tracks :albums) :test #'equal)
-		(if include-keys?
-		    (format nil "~a:~a" (string key)
-			    (mapcar #'(lambda (each) (format-plist each include-keys?)) value))
-		    (format nil "~a" (mapcar #'(lambda (each) (format-plist each include-keys?)) value))))
+               ((member key '(:external-ids :artists :tracks :albums) :test #'equal)
+                (if include-keys?
+                    (format nil "~a:~a" (string key)
+                            (mapcar #'(lambda (each) (format-plist each include-keys?)) value))
+                    (format nil "~a" (mapcar #'(lambda (each) (format-plist each include-keys?)) value))))
 
-	       (t
-		(if include-keys?
-		    (format nil "~a:~a" key value)
-		    (format nil "~a" value))))))
+               (t
+                (if include-keys?
+                    (format nil "~a:~a" key value)
+                    (format nil "~a" value))))))
 
 (defun filter-results (results &rest filters)
   "Generates a list of results that match only the specified results (key-value pairs)."
   (remove nil
-	  (loop for each-result in results collect
-	       (loop for (key value) on filters by #'cddr
-		  when (string-equal value (getf each-result key))
-		  do (return each-result)))))
+          (loop for each-result in results collect
+               (loop for (key value) on filters by #'cddr
+                  when (string-equal value (getf each-result key))
+                  do (return each-result)))))
 
 (defun api-service (service query)
   "Rudimentary exception handling for all services."
   (handler-case
       (progn
-	(case service
-	  (album-search (album-search query))
-	  (artist-search (artist-search query))
-	  (track-search (track-search query))
-	  (album-lookup (album-lookup query))
-	  (artist-lookup (artist-lookup query))
-	  (track-lookup (track-lookup query))
-	  (otherwise (print "Specify one of '(album-search artist-search track-search
-album-lookup artist-lookup track-lookup)"))))
+        (case service
+          (album-search (album-search query))
+          (artist-search (artist-search query))
+          (track-search (track-search query))
+          (album-lookup (album-lookup query))
+          (artist-lookup (artist-lookup query))
+          (track-lookup (track-lookup query))
+          (otherwise (format t "Specify one of: '(album-search artist-search track-search album-lookup artist-lookup track-lookup)"))))
     (error (e) (print e))))
 
 (defun album-search (search-term)
@@ -120,5 +119,4 @@ album-lookup artist-lookup track-lookup)"))))
 
 (defun generate-embed-html (uri &key (width 300) (height 380))
   "Generate HTML markup for embedding spotify widgets."
-  (format nil "<iframe src=\"https://embed.spotify.com/?uri=~a\" width=\"~d\" height=\"~d\"
-frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
+  #?|<iframe src="https://embed.spotify.com/?uri=${uri}" width="${width}" height="${height}" frameborder="0" allowtransparency="true"></iframe>|)
