@@ -12,5 +12,6 @@
   :components
   ((:file "package")
    (:file "utils")
-   (:file "parsers"))
-   :depends-on (drakma yason cl-interpol))
+   (:file "parsers")
+   (:file "htmlhelpers"))
+   :depends-on (drakma yason cl-interpol cl-who))
