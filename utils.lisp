@@ -92,3 +92,7 @@
   (track-lookup-parser (gethash "track"
                                 (get-json-response
                                  (construct-url 'track-lookup lookup-term)))))
+
+(defun is-uri (input)
+  ;; Scans string to check if Spotify URI.
+  (and (ppcre:scan "^spotify:.+$" input) t))
