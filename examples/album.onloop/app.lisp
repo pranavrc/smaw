@@ -13,7 +13,7 @@
        (:link :rel "stylesheet" :href (restas:genurl 'css))
        (:link :rel "shortcut icon" :type "image/x-icon" :href (restas:genurl 'favicon)))
       (:body
-       (:p :id "response"
+       (:div :id "response"
 	   ,@response)))))
 
 (restas:define-route main ("")
@@ -27,43 +27,42 @@
 
 (restas:define-route query (":(type)/:(query)/l")
   (response-template 
-    (:div :id "response"
-	  (who:str
-	   (handler-case
-	       (let* ((params (album-onloop::string-split query #\!)))
-		 (if (cl-smaw::is-uri (first params))
-		     (cond
-		       ((string= type "album") (cl-smaw::album-lookup-html (cl-smaw::album-lookup (first params))))
-		       ((string= type "artist") (cl-smaw::artist-lookup-html (cl-smaw::artist-lookup (first params))))
-		       ((string= type "track") (cl-smaw::track-lookup-html (cl-smaw::track-lookup (first params))))
-		       (t "Invalid URL."))
-		     (cond
-		       ((string= type "album")
-			(if (second params)
-			    (cl-smaw::album-lookup-html
-			     (cl-smaw::album-lookup 
-			      (getf (nth (- (parse-integer (second params)) 1)
-					 (cl-smaw::album-search (first params))) :href)))
-			    (cl-smaw::album-lookup-html
-			     (cl-smaw::album-lookup (getf (first
-							   (cl-smaw::album-search (first params))) :href)))))
-		       ((string= type "artist")
-			(if (second params)
-			    (cl-smaw::artist-lookup-html
-			     (cl-smaw::artist-lookup (getf (nth (- (parse-integer (second params)) 1)
-								(cl-smaw::artist-search (first params))) :href)))
-			    (cl-smaw::artist-lookup-html (cl-smaw::artist-lookup
-							  (getf (first (cl-smaw::artist-search (first params)))
-								:href)))))
-		       ((string= type "track")
-			(if (second params)
-			    (cl-smaw::track-lookup-html (cl-smaw::track-lookup
-							 (getf (nth (- (parse-integer (second params)) 1)
-								    (cl-smaw::track-search (first params))) :href)))
-			    (cl-smaw::track-lookup-html (cl-smaw::track-lookup
-							 (getf (first (cl-smaw::track-search (first params))) :href)))))
-		       (t "Invalid URL."))))
-	     (error (e) "Oops, something went wrong."))))))
+    (who:str
+     (handler-case
+	 (let* ((params (album-onloop::string-split query #\!)))
+	   (if (cl-smaw::is-uri (first params))
+	       (cond
+		 ((string= type "album") (cl-smaw::album-lookup-html (cl-smaw::album-lookup (first params))))
+		 ((string= type "artist") (cl-smaw::artist-lookup-html (cl-smaw::artist-lookup (first params))))
+		 ((string= type "track") (cl-smaw::track-lookup-html (cl-smaw::track-lookup (first params))))
+		 (t "Invalid URL."))
+	       (cond
+		 ((string= type "album")
+		  (if (second params)
+		      (cl-smaw::album-lookup-html
+		       (cl-smaw::album-lookup 
+			(getf (nth (- (parse-integer (second params)) 1)
+				   (cl-smaw::album-search (first params))) :href)))
+		      (cl-smaw::album-lookup-html
+		       (cl-smaw::album-lookup (getf (first
+						     (cl-smaw::album-search (first params))) :href)))))
+		 ((string= type "artist")
+		  (if (second params)
+		      (cl-smaw::artist-lookup-html
+		       (cl-smaw::artist-lookup (getf (nth (- (parse-integer (second params)) 1)
+							  (cl-smaw::artist-search (first params))) :href)))
+		      (cl-smaw::artist-lookup-html (cl-smaw::artist-lookup
+						    (getf (first (cl-smaw::artist-search (first params)))
+							  :href)))))
+		 ((string= type "track")
+		  (if (second params)
+		      (cl-smaw::track-lookup-html (cl-smaw::track-lookup
+						   (getf (nth (- (parse-integer (second params)) 1)
+							      (cl-smaw::track-search (first params))) :href)))
+		      (cl-smaw::track-lookup-html (cl-smaw::track-lookup
+						   (getf (first (cl-smaw::track-search (first params))) :href)))))
+		 (t "Invalid URL."))))
+       (error (e) "Oops, something went wrong.")))))
 
 (restas:define-route not-found ("*any")
   (response-template (:div (who:str "Invalid URL."))))
