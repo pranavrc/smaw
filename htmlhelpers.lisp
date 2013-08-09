@@ -37,7 +37,9 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 
 (defun entry (category plist)
   (if (typep (getf plist category) 'list)
-      (string-from-plist category plist)
+      (if (typep (first (getf plist category)) 'list)
+	  (string-from-plists category plist)
+	  (string-from-plist category plist))
       (who:with-html-output-to-string (*standard-output* nil)
 	(:p (who:str (concatenate 'string
 				  (who:with-html-output-to-string (*standard-output* nil) (:b (who:str (string-capitalize category))))
@@ -66,7 +68,7 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 		 (loop for (key value) on (getf plist category) by #'cddr
 		    do (format s
 			       (entry key (getf plist category)))))
-	       "</div>"))
+	       "</div><br />"))
 
 (defun album-search-html (plist)
   (concatenate 'string
@@ -93,3 +95,11 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 	       (string-from-plists :artists plist) "<br />"
 	       (entry :track-number plist) "<br />"
 	       (entry :length plist) "<br />"))
+
+(defun album-lookup-html (plist)
+  (concatenate 'string
+	       (entry :name plist) "<br />"
+	       (entry :artist plist) "<br />"
+	       (entry :artist-id plist) "<br />"
+	       (string-from-plist :availability plist) "<br />"
+	       (string-from-plists :tracks plist) "<br />"))
