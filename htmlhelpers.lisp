@@ -34,3 +34,42 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
        (who:with-html-output-to-string (*standard-output* nil)
 	 (:b (who:str (concatenate 'string (string-downcase (string key)) " : ")))
 	 (:i (who:str value)))))
+
+(defun entry (category value)
+  (who:with-html-output-to-string (*standard-output* nil)
+    (:p (who:str (concatenate 'string
+			      (who:with-html-output-to-string (*standard-output* nil) (:b (who:str category)))
+			      " " value)))))
+
+(defun string-from-plists (category plist)
+  (concatenate 'string
+	       "<strong>" (string-capitalize category) "</strong>"
+	       "<br /><div id='inner'>"
+	       (with-output-to-string (s)
+		 (loop for each-plist in (getf plist category)
+		    do (format s
+			       (with-output-to-string (d)
+				 (loop for (key value) on each-plist by #'cddr
+				    do (format d
+					       (concatenate 'string
+							    (entry (string-capitalize key) value) "<br />")))))))
+	       "</div>"))
+
+(defun string-from-plist (category plist)
+  (concatenate 'string
+	       "<strong>" (string-capitalize category) "</strong>"
+	       "<br /><div id='inner'>"
+	       (with-output-to-string (s)
+		 (loop for (key value) on (getf plist category) by #'cddr
+		    do (format s
+			       (entry (string-capitalize key) value))))
+	       "</div>"))
+
+(defun album-search-html (plist)
+  (concatenate 'string
+	       (entry "Name" (getf plist :name)) "<br />"
+	       (entry "Href" (getf plist :href)) "<br />"
+	       (entry "Popularity" (getf plist :popularity)) "<br />"
+	       (string-from-plists :artists plist) "<br />"
+	       (string-from-plists :external-ids plist) "<br />"
+	       (string-from-plist :availability plist) "<br />"))
