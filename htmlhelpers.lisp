@@ -35,11 +35,11 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 	 (:b (who:str (concatenate 'string (string-downcase (string key)) " : ")))
 	 (:i (who:str value)))))
 
-(defun entry (category value)
+(defun entry (category plist)
   (who:with-html-output-to-string (*standard-output* nil)
     (:p (who:str (concatenate 'string
-			      (who:with-html-output-to-string (*standard-output* nil) (:b (who:str category)))
-			      " " value)))))
+			      (who:with-html-output-to-string (*standard-output* nil) (:b (who:str (string-capitalize category))))
+			      " " (getf plist category))))))
 
 (defun string-from-plists (category plist)
   (concatenate 'string
@@ -52,7 +52,7 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 				 (loop for (key value) on each-plist by #'cddr
 				    do (format d
 					       (concatenate 'string
-							    (entry (string-capitalize key) value) "<br />")))))))
+							    (entry key each-plist) value) "<br />"))))))
 	       "</div>"))
 
 (defun string-from-plist (category plist)
@@ -62,14 +62,14 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 	       (with-output-to-string (s)
 		 (loop for (key value) on (getf plist category) by #'cddr
 		    do (format s
-			       (entry (string-capitalize key) value))))
+			       (entry key (getf plist category)))))
 	       "</div>"))
 
 (defun album-search-html (plist)
   (concatenate 'string
-	       (entry "Name" (getf plist :name)) "<br />"
-	       (entry "Href" (getf plist :href)) "<br />"
-	       (entry "Popularity" (getf plist :popularity)) "<br />"
+	       (entry :name plist) "<br />"
+	       (entry :href plist) "<br />"
+	       (entry :popularity plist) "<br />"
 	       (string-from-plists :artists plist) "<br />"
 	       (string-from-plists :external-ids plist) "<br />"
 	       (string-from-plist :availability plist) "<br />"))
