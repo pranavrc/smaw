@@ -72,53 +72,59 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 
 (defun album-search-html (plist)
   (concatenate 'string
-	       (entry :name plist) "<br />"
-	       (entry :href plist) "<br />"
-	       (entry :popularity plist) "<br />"
-	       (string-from-plists :artists plist) "<br />"
-	       (string-from-plists :external-ids plist) "<br />"
-	       (string-from-plist :availability plist) "<br />"))
+	       (entry :name plist) (list #\Newline)
+	       (entry :href plist) (list #\Newline)
+	       (entry :popularity plist) (list #\Newline)
+	       (string-from-plists :artists plist) (list #\Newline)
+	       (string-from-plists :external-ids plist) (list #\Newline)
+	       (string-from-plist :availability plist) (list #\Newline)))
 
 (defun artist-search-html (plist)
   (concatenate 'string
-	       (entry :name plist) "<br />"
-	       (entry :href plist) "<br />"
-	       (entry :popularity plist) "<br />"))
+	       (entry :name plist) (list #\Newline)
+	       (entry :href plist) (list #\Newline)
+	       (entry :popularity plist) (list #\Newline)))
 
 (defun track-search-html (plist)
   (concatenate 'string
-	       (entry :name plist) "<br />"
-	       (entry :href plist) "<br />"
-	       (entry :popularity plist) "<br />"
-	       (string-from-plist :album plist) "<br />"
-	       (string-from-plists :external-ids plist) "<br />"
-	       (string-from-plists :artists plist) "<br />"
-	       (entry :track-number plist) "<br />"
-	       (entry :length plist) "<br />"))
+	       (entry :name plist) (list #\Newline)
+	       (entry :href plist) (list #\Newline)
+	       (entry :popularity plist) (list #\Newline)
+	       (string-from-plist :album plist) (list #\Newline) 
+	       (string-from-plists :external-ids plist) (list #\Newline)
+	       (string-from-plists :artists plist) (list #\Newline)
+	       (entry :track-number plist) (list #\Newline)
+	       (entry :length plist) (list #\Newline)))
 
 (defun album-lookup-html (plist)
   (concatenate 'string
-	       (entry :name plist) "<br />"
-	       (entry :artist plist) "<br />"
-	       (entry :artist-id plist) "<br />"
-	       (string-from-plist :availability plist) "<br />"
-	       (string-from-plists :tracks plist) "<br />"))
+	       (entry :name plist) (list #\Newline)
+	       (entry :artist plist) (list #\Newline)
+	       (entry :artist-id plist) (list #\Newline)
+	       (string-from-plist :availability plist) (list #\Newline)
+	       (string-from-plists :tracks plist) (list #\Newline)
+	       "<div id='widget'>"
+	       (generate-embed-html (getf plist :href))
+	       "</div>"))
 
 (defun artist-lookup-html (plist)
   (concatenate 'string
-	       (entry :name plist) "<br />"
-	       (entry :href plist) "<br />"
-	       (string-from-plists :albums plist) "<br />"))
+	       (entry :name plist) (list #\Newline)
+	       (entry :href plist) (list #\Newline)
+	       (string-from-plists :albums plist)  (list #\Newline)))
 
 (defun track-lookup-html (plist)
   (concatenate 'string
-	       (entry :name plist) "<br />"
-	       (entry :href plist) "<br />"
-	       (entry :length plist) "<br />"
-	       (entry :popularity plist) "<br />"
-	       (entry :available plist) "<br />"
-	       (entry :track-number plist) "<br />"
-	       (string-from-plist :album plist) "<br />"
-	       (string-from-plists :artists plist) "<br />"
-	       (string-from-plist :availability plist) "<br />"
-	       (string-from-plists :external-ids plist) "<br />"))
+	       (entry :name plist) (list #\Newline)
+	       (entry :href plist) (list #\Newline)
+	       (entry :length plist) (list #\Newline)
+	       (entry :popularity plist) (list #\Newline)
+	       (entry :available plist) (list #\Newline)
+	       (entry :track-number plist) (list #\Newline)
+	       (string-from-plist :album plist) (list #\Newline)
+	       (string-from-plists :artists plist) (list #\Newline)
+	       (string-from-plist :availability plist) (list #\Newline)
+	       (string-from-plists :external-ids plist) (list #\Newline)
+	       "<div id='widget'>"
+	       (generate-embed-html (getf plist :href))
+	       "</div>"))

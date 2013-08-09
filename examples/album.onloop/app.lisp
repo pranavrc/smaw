@@ -9,7 +9,7 @@
      (:html
       (:head
        (:meta :charset "utf-8")
-       (:title "QuickHist")
+       (:title "album.onloop")
        (:link :rel "stylesheet" :href (restas:genurl 'css))
        (:link :rel "shortcut icon" :type "image/x-icon" :href (restas:genurl 'favicon)))
       (:body
