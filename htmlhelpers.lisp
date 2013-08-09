@@ -51,14 +51,16 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 (defun string-from-plists (category plist)
   (concatenate 'string
 	       "<strong>" (string-capitalize category) "</strong>"
-	       "<br /><div id='inner'>"
+	       "<br />"
 	       (with-output-to-string (s)
-		 (loop for each-plist in (getf plist category)
-		    do (format s
-			       (with-output-to-string (d)
-				 (loop for (key value) on each-plist by #'cddr
-				    do (format d (entry key each-plist)))))))
-	       "</div>"))
+		 (loop for each-plist in (getf plist category) do
+		      (format s
+			      (concatenate 'string
+					   "<div id='inner'>"
+					   (with-output-to-string (d)
+					     (loop for (key value) on each-plist by #'cddr
+						do (format d (entry key each-plist))))
+					   "</div>"))))))
 
 (defun string-from-plist (category plist)
   (concatenate 'string
@@ -98,14 +100,14 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 
 (defun album-lookup-html (plist)
   (concatenate 'string
+	       "<div id='widget'>"
+	       (generate-embed-html (getf plist :href))
+	       "</div><hr />"
 	       (entry :name plist) (list #\Newline)
 	       (entry :artist plist) (list #\Newline)
 	       (entry :artist-id plist) (list #\Newline)
 	       (string-from-plist :availability plist) (list #\Newline)
-	       (string-from-plists :tracks plist) (list #\Newline)
-	       "<div id='widget'>"
-	       (generate-embed-html (getf plist :href))
-	       "</div>"))
+	       (string-from-plists :tracks plist) (list #\Newline)))
 
 (defun artist-lookup-html (plist)
   (concatenate 'string
@@ -115,6 +117,9 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 
 (defun track-lookup-html (plist)
   (concatenate 'string
+	       "<div id='widget'>"
+	       (generate-embed-html (getf plist :href))
+	       "</div><hr />"
 	       (entry :name plist) (list #\Newline)
 	       (entry :href plist) (list #\Newline)
 	       (entry :length plist) (list #\Newline)
@@ -124,7 +129,4 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 	       (string-from-plist :album plist) (list #\Newline)
 	       (string-from-plists :artists plist) (list #\Newline)
 	       (string-from-plist :availability plist) (list #\Newline)
-	       (string-from-plists :external-ids plist) (list #\Newline)
-	       "<div id='widget'>"
-	       (generate-embed-html (getf plist :href))
-	       "</div>"))
+	       (string-from-plists :external-ids plist) (list #\Newline)))
