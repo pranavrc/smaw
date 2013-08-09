@@ -103,3 +103,22 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 	       (entry :artist-id plist) "<br />"
 	       (string-from-plist :availability plist) "<br />"
 	       (string-from-plists :tracks plist) "<br />"))
+
+(defun artist-lookup-html (plist)
+  (concatenate 'string
+	       (entry :name plist) "<br />"
+	       (entry :href plist) "<br />"
+	       (string-from-plists :albums plist) "<br />"))
+
+(defun track-lookup-html (plist)
+  (concatenate 'string
+	       (entry :name plist) "<br />"
+	       (entry :href plist) "<br />"
+	       (entry :length plist) "<br />"
+	       (entry :popularity plist) "<br />"
+	       (entry :available plist) "<br />"
+	       (entry :track-number plist) "<br />"
+	       (string-from-plist :album plist) "<br />"
+	       (string-from-plists :artists plist) "<br />"
+	       (string-from-plist :availability plist) "<br />"
+	       (string-from-plists :external-ids plist) "<br />"))
