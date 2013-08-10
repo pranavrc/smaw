@@ -3,6 +3,7 @@
 (in-package :restas.album-onloop)
 
 (restas:debug-mode-on)
+(setf (who:html-mode) :html5)
 
 (defmacro response-template (&body response)
   `(who:with-html-output-to-string (*standard-output* nil :prologue t)
@@ -25,42 +26,66 @@
   (pathname "~/workbase/cl-smaw/examples/album.onloop/res/favicon.ico"))
 
 (restas:define-route query (":(type)/:(query)")
-  (response-template
-   (:div :id "response"
-	 (who:str
+  (defparameter response
+    (handler-case
+	(let ((params (cl-smaw::string-split query #\!))
+	      (lookup-query nil)
+	      (search-query nil))
+	  (progn
+	    (cond
+	      ((string= type "album")
+	       (setf lookup-query t)
+	       (setf (symbol-function 's-lookup-html) (function cl-smaw::album-lookup-html))
+	       (setf (symbol-function 's-lookup) (function cl-smaw::album-lookup))
+	       (setf (symbol-function 's-search) (function cl-smaw::album-search)))
+	      ((string= type "artist")
+	       (setf lookup-query t)
+	       (setf (symbol-function 's-lookup-html) (function cl-smaw::artist-lookup-html))
+	       (setf (symbol-function 's-lookup) (function cl-smaw::artist-lookup))
+	       (setf (symbol-function 's-search) (function cl-smaw::artist-search)))
+	      ((string= type "track")
+	       (setf lookup-query t)
+	       (setf (symbol-function 's-lookup-html) (function cl-smaw::track-lookup-html))
+	       (setf (symbol-function 's-lookup) (function cl-smaw::track-lookup))
+	       (setf (symbol-function 's-search) (function cl-smaw::track-search)))
+	      ((string= type "albums")
+	       (setf search-query t)
+	       (setf (symbol-function 's-search-html) (function cl-smaw::album-search-html))
+	       (setf (symbol-function 's-search) (function cl-smaw::album-search)))
+	      ((string= type "artists")
+	       (setf search-query t)
+	       (setf (symbol-function 's-search-html) (function cl-smaw::artist-search-html))
+	       (setf (symbol-function 's-search) (function cl-smaw::artist-search)))
+	      ((string= type "tracks")
+	       (setf search-query t)
+	       (setf (symbol-function 's-search-html) (function cl-smaw::track-search-html))
+	       (setf (symbol-function 's-search) (function cl-smaw::track-search)))
+	      (t (error "Invalid URL."))))
 	  (handler-case
-	      (let ((params (cl-smaw::string-split query #\!)))
-		(progn
-		  (cond
-		    ((string= type "album")
-		     (setf (symbol-function 's-lookup-html) (function cl-smaw::album-lookup-html))
-		     (setf (symbol-function 's-lookup) (function cl-smaw::album-lookup))
-		     (setf (symbol-function 's-search) (function cl-smaw::album-search)))
-		    ((string= type "artist")
-		     (setf (symbol-function 's-lookup-html) (function cl-smaw::artist-lookup-html))
-		     (setf (symbol-function 's-lookup) (function cl-smaw::artist-lookup))
-		     (setf (symbol-function 's-search) (function cl-smaw::artist-search)))
-		    ((string= type "track")
-		     (setf (symbol-function 's-lookup-html) (function cl-smaw::track-lookup-html))
-		     (setf (symbol-function 's-lookup) (function cl-smaw::track-lookup))
-		     (setf (symbol-function 's-search) (function cl-smaw::track-search)))
-		    (t (error "Invalid URL."))))
-		(handler-case
-		    (progn
-		      (if (cl-smaw::is-uri (first params))
-			  (s-lookup-html (s-lookup (first params)))
-			  (if (second params)
-			      (s-lookup-html
-			       (s-lookup 
-				(getf (nth (- (parse-integer (second params)) 1)
-					   (s-search (first params))) :href)))
-			      (s-lookup-html
-			       (s-lookup (getf (first
-						(s-search (first params))) :href))))))
-		  (error (e) (error "Not found."))))
-	    (error (e) e))))))
+	      (progn
+		(cond
+		  ((and lookup-query (not search-query))
+		   (if (cl-smaw::is-uri (first params))
+		       (s-lookup-html (s-lookup (first params)))
+		       (if (second params)
+			   (s-lookup-html
+			    (s-lookup 
+			     (getf (nth (- (parse-integer (second params)) 1)
+					(s-search (first params))) :href)))
+			   (s-lookup-html
+			    (s-lookup (getf (first
+					     (s-search (first params))) :href))))))
+		  ((and search-query (not lookup-query))
+		   (let ((search-results (s-search (first params))))
+		     (if search-results
+			 (format nil "~{~a~^<hr />~}"
+				 (mapcar #'s-search-html (s-search (first params))))
+			 (error ""))))))
+	    (error (e) (error "Not found."))))
+      (error (e) e)))
+  (response-template (:div :id "response" (who:str response))))
 
 (restas:define-route not-found ("*any")
-  (response-template (:div (who:str "Invalid URL."))))
+  (response-template (:div :id "response" "Invalid URL.")))
 
 (restas:start '#:restas.album-onloop :port 8080)
