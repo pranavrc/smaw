@@ -51,27 +51,29 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 
 (defun string-from-plists (category plist)
   (concatenate 'string
-	       "<strong>" (string-capitalize category) "</strong>"
-	       "<br />"
+	       (who:with-html-output-to-string (*standard-output* nil)
+		 (:strong (who:str (string-capitalize category)))
+		 (:br))
 	       (with-output-to-string (s)
 		 (loop for each-plist in (getf plist category) do
 		      (format s
-			      (concatenate 'string
-					   "<div id='inner'>"
-					   (with-output-to-string (d)
-					     (loop for (key value) on each-plist by #'cddr
-						do (format d (entry key each-plist))))
-					   "</div>"))))))
+			      (who:with-html-output-to-string (*standard-output* nil)
+				(:div :id "inner"
+				      (who:str (with-output-to-string (d)
+						 (loop for (key value) on each-plist by #'cddr do
+						      (format d (entry key each-plist))))))))))))
 
 (defun string-from-plist (category plist)
-  (concatenate 'string
-	       "<strong>" (string-capitalize category) "</strong>"
-	       "<br /><div id='inner'>"
-	       (with-output-to-string (s)
-		 (loop for (key value) on (getf plist category) by #'cddr
-		    do (format s
-			       (entry key (getf plist category)))))
-	       "</div><br />"))
+  (who:with-html-output-to-string (*standard-output* nil)
+    (:strong (who:str (string-capitalize category)))
+    (:br)
+    (:div :id "inner"
+	  (who:str 
+	   (with-output-to-string (s)
+	     (loop for (key value) on (getf plist category) by #'cddr
+		do (format s
+			   (entry key (getf plist category)))))))
+    (:br)))
 
 (defun album-search-html (plist)
   (concatenate 'string
