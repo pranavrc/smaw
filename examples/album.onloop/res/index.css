@@ -45,8 +45,8 @@ h3 {
 hr {
 	color: white;
 	border: 0;
-    height: 1px;
-    background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0));
+	height: 1px;
+	background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0));
 	background-image: -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0));
 	background-image: -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0));
 	background-image: -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.3), rgba(0,0,0,0));
@@ -90,7 +90,7 @@ a:visited {
 	padding: 25px;
 	border: 1px solid #999;
 	line-height: 50%;
-    width: 70%;
+	width: 70%;
 	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
@@ -106,7 +106,7 @@ a:visited {
 	background-color: hsl(0,0%,90%);
 	padding: 5px;
 	border-left: 1px solid #999;
-    width: 90%;
+	width: 90%;
 	/*-webkit-box-shadow: -5px 0px 1px rgba(0, 0, 0, 0.3);
 	-moz-box-shadow: -5px 0px 1px rgba(0, 0, 0, 0.3);
 	box-shadow: -5px 0px 1px rgba(0, 0, 0, 0.3);*/
