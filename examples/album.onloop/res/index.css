@@ -1,6 +1,6 @@
 body {
 	background-color: hsl(0,0%,95%);
-	line-height: 50%;
+	line-height: 150%;
 }
 
 #description {
@@ -89,12 +89,13 @@ a:visited {
 	background-color: hsl(0,0%,90%);
 	padding: 25px;
 	border: 1px solid #999;
-    width: 80%;
+	line-height: 50%;
+    width: 70%;
 	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
-	font-size:12px;
+	font-size:13px;
 	margin: auto;
 	text-align: left;
 	text-shadow: hsla(0,0%,40%,.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;
