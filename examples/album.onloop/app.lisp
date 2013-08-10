@@ -114,6 +114,9 @@
 			(mapcar #'smaw::track-search-html (smaw:track-search (first params))))
 		(error ""))))
       (error (e) *not-found*))))
+
+(restas:define-route reviews ("reviews/:(query)")
+  (restas:redirect (format nil "http://album.onloop.net/?q=~a" query)))
 	  
 (restas:define-route not-found ("*any")
   (response-template *invalid-url*))
