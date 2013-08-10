@@ -12,6 +12,31 @@ body {
 	text-align: center;
 }
 
+#services {
+	margin: auto;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 60%;
+	line-height: 150%;
+	border: 1px solid #999;
+	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
+	padding: 10px 50px 15px 50px;
+	background-color: hsl(0,0%,90%);
+	text-align: left;
+	font-size: 13.5px;
+}
+
+#links {
+	margin-left: 50px;
+	border-radius: 10px;
+	border-left: 1px solid #999;
+	padding-left: 10px;
+	margin-bottom: 10px;
+}
+
 img {
 	border-radius: 5px;
 }
@@ -24,6 +49,9 @@ img {
 h3 {
 	font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
 	text-shadow: hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;
+	text-align: center;
+	margin-bottom: 7px;
+	margin-top: 5px;
 }
 
 #exp {
@@ -55,6 +83,7 @@ hr {
 h1 {
 	text-align: center;
 	margin-bottom: 5px;
+	text-shadow: hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;
 }
 
 input {
