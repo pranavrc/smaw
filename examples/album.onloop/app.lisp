@@ -45,17 +45,20 @@
 		(setf (symbol-function 's-lookup) (function cl-smaw::track-lookup))
 		(setf (symbol-function 's-search) (function cl-smaw::track-search)))
 	       (t (error "Invalid URL."))))
-	   (if (cl-smaw::is-uri (first params))
-	       (s-lookup-html (s-lookup (first params)))
-	       (if (second params)
-		   (s-lookup-html
-		    (s-lookup 
-		     (getf (nth (- (parse-integer (second params)) 1)
-				(s-search (first params))) :href)))
-		   (s-lookup-html
-		    (s-lookup (getf (first
-				     (s-search (first params))) :href))))))
-       (error (e) "Oops, something went wrong. Try again.")))))
+	   (handler-case
+	       (progn
+		 (if (cl-smaw::is-uri (first params))
+		     (s-lookup-html (s-lookup (first params)))
+		     (if (second params)
+			 (s-lookup-html
+			  (s-lookup 
+			   (getf (nth (- (parse-integer (second params)) 1)
+				      (s-search (first params))) :href)))
+			 (s-lookup-html
+			  (s-lookup (getf (first
+					   (s-search (first params))) :href))))))
+	     (error (e) (error "Not found."))))
+       (error (e) e)))))
 
 (restas:define-route not-found ("*any")
   (response-template (:div (who:str "Invalid URL."))))
