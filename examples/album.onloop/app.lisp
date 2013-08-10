@@ -4,6 +4,8 @@
 
 (restas:debug-mode-on)
 (setf (who:html-mode) :html5)
+(defparameter *not-found* "Something like that doesn't seem to exist on Spotify...<i>yet</i>.")
+(defparameter *invalid-url* "Yeah, well, y'know, that's just like, uh, a bad URL, man.")
 
 (defmacro response-template (&body response)
   `(who:with-html-output-to-string (*standard-output* nil :prologue t)
@@ -14,7 +16,8 @@
        (:link :rel "stylesheet" :href (restas:genurl 'css))
        (:link :rel "shortcut icon" :type "image/x-icon" :href (restas:genurl 'favicon)))
       (:body
-       ,@response))))
+       (:div :id "response"
+	     (who:str ,@response))))))
 
 (restas:define-route main ("")
   (pathname "~/workbase/smaw/examples/album.onloop/res/index.html"))
@@ -25,67 +28,94 @@
 (restas:define-route favicon ("favicon.ico")
   (pathname "~/workbase/smaw/examples/album.onloop/res/favicon.ico"))
 
-(restas:define-route query (":(type)/:(query)")
-  (defparameter response
+(restas:define-route album-lookup-route ("album/:(query)")
+  (response-template
     (handler-case
-	(let ((params (smaw:string-split query #\!))
-	      (lookup-query nil)
-	      (search-query nil))
-	  (progn
-	    (cond
-	      ((string= type "album")
-	       (setf lookup-query t)
-	       (setf (symbol-function 's-lookup-html) (function smaw:album-lookup-html))
-	       (setf (symbol-function 's-lookup) (function smaw:album-lookup))
-	       (setf (symbol-function 's-search) (function smaw:album-search)))
-	      ((string= type "artist")
-	       (setf lookup-query t)
-	       (setf (symbol-function 's-lookup-html) (function smaw:artist-lookup-html))
-	       (setf (symbol-function 's-lookup) (function smaw:artist-lookup))
-	       (setf (symbol-function 's-search) (function smaw:artist-search)))
-	      ((string= type "track")
-	       (setf lookup-query t)
-	       (setf (symbol-function 's-lookup-html) (function smaw:track-lookup-html))
-	       (setf (symbol-function 's-lookup) (function smaw:track-lookup))
-	       (setf (symbol-function 's-search) (function smaw:track-search)))
-	      ((string= type "albums")
-	       (setf search-query t)
-	       (setf (symbol-function 's-search-html) (function smaw:album-search-html))
-	       (setf (symbol-function 's-search) (function smaw:album-search)))
-	      ((string= type "artists")
-	       (setf search-query t)
-	       (setf (symbol-function 's-search-html) (function smaw:artist-search-html))
-	       (setf (symbol-function 's-search) (function smaw:artist-search)))
-	      ((string= type "tracks")
-	       (setf search-query t)
-	       (setf (symbol-function 's-search-html) (function smaw:track-search-html))
-	       (setf (symbol-function 's-search) (function smaw:track-search)))
-	      (t (error "Yeah, well, y'know, that's just like, uh, a bad URL, man."))))
-	  (handler-case
-	      (progn
-		(cond
-		  ((and lookup-query (not search-query))
-		   (if (smaw:is-uri (first params))
-		       (s-lookup-html (s-lookup (first params)))
-		       (if (second params)
-			   (s-lookup-html
-			    (s-lookup 
-			     (getf (nth (- (parse-integer (second params)) 1)
-					(s-search (first params))) :href)))
-			   (s-lookup-html
-			    (s-lookup (getf (first
-					     (s-search (first params))) :href))))))
-		  ((and search-query (not lookup-query))
-		   (let ((search-results (s-search (first params))))
-		     (if search-results
-			 (format nil "~{~a~^<hr />~}"
-				 (mapcar #'s-search-html (s-search (first params))))
-			 (error ""))))))
-	    (error (e) (error "Something like that doesn't seem to exist on Spotify...<i>yet</i>."))))
-      (error (e) e)))
-  (response-template (:div :id "response" (who:str response))))
+	(progn
+	  (let ((params (smaw:string-split query #\!)))
+	    (if (smaw:is-uri (first params))
+		(smaw::album-lookup-html (smaw:album-lookup (first params)))
+		(if (second params)
+		    (smaw::album-lookup-html
+		     (smaw:album-lookup 
+		      (getf (nth (- (parse-integer (second params)) 1)
+				 (smaw:album-search (first params))) :href)))
+		    (smaw::album-lookup-html
+		     (smaw:album-lookup (getf (first
+					       (smaw:album-search (first params))) :href)))))))
+      (error (e) *not-found*))))
 
+(restas:define-route artist-lookup-route ("artist/:(query)")
+  (response-template
+    (handler-case
+	(progn
+	  (let ((params (smaw:string-split query #\!)))
+	    (if (smaw:is-uri (first params))
+		(smaw::artist-lookup-html (smaw:artist-lookup (first params)))
+		(if (second params)
+		    (smaw::artist-lookup-html
+		     (smaw:artist-lookup 
+		      (getf (nth (- (parse-integer (second params)) 1)
+				 (smaw:artist-search (first params))) :href)))
+		    (smaw::artist-lookup-html
+		     (smaw:artist-lookup (getf (first
+						(smaw:artist-search (first params))) :href)))))))
+      (error (e) *not-found*))))
+
+(restas:define-route track-lookup-route ("track/:(query)")
+  (response-template
+    (handler-case
+	(progn
+	  (let ((params (smaw:string-split query #\!)))
+	    (if (smaw:is-uri (first params))
+		(smaw::track-lookup-html (smaw:track-lookup (first params)))
+		(if (second params)
+		    (smaw::track-lookup-html
+		     (smaw:track-lookup 
+		      (getf (nth (- (parse-integer (second params)) 1)
+				 (smaw:track-search (first params))) :href)))
+		    (smaw::track-lookup-html
+		     (smaw:track-lookup (getf (first
+					       (smaw:track-search (first params))) :href)))))))
+      (error (e) *not-found*))))
+
+(restas:define-route album-search-route ("albums/:(query)")
+  (response-template
+    (handler-case
+	(progn
+	  (let* ((params (smaw:string-split query #\!))
+		 (search-results (smaw:album-search (first params))))
+	    (if search-results
+		(format nil "~{~a~^<hr />~}"
+			(mapcar #'smaw::album-search-html (smaw:album-search (first params))))
+		(error ""))))
+      (error (e) *not-found*))))
+
+(restas:define-route artist-search-route ("artists/:(query)")
+  (response-template
+    (handler-case
+	(progn
+	  (let* ((params (smaw:string-split query #\!))
+		 (search-results (smaw:artist-search (first params))))
+	    (if search-results
+		(format nil "~{~a~^<hr />~}"
+			(mapcar #'smaw::artist-search-html (smaw:artist-search (first params))))
+		(error ""))))
+      (error (e) *not-found*))))
+
+(restas:define-route track-search-route ("tracks/:(query)")
+  (response-template
+    (handler-case
+	(progn
+	  (let* ((params (smaw:string-split query #\!))
+		 (search-results (smaw:track-search (first params))))
+	    (if search-results
+		(format nil "~{~a~^<hr />~}"
+			(mapcar #'smaw::track-search-html (smaw:track-search (first params))))
+		(error ""))))
+      (error (e) *not-found*))))
+	  
 (restas:define-route not-found ("*any")
-  (response-template (:div :id "response" "Yeah, well, y'know, that's just like, uh, a bad URL, man.")))
+  (response-template *invalid-url*))
 
 (restas:start '#:restas.album-onloop :port 8080)
