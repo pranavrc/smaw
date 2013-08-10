@@ -52,13 +52,13 @@
   (handler-case
       (progn
         (case service
-          (album-search (album-search query))
-          (artist-search (artist-search query))
-          (track-search (track-search query))
-          (album-lookup (album-lookup query))
-          (artist-lookup (artist-lookup query))
-          (track-lookup (track-lookup query))
-          (otherwise (format t "Specify one of: '(album-search artist-search 
+          (search-album (album-search query))
+          (search-artist (artist-search query))
+          (search-track (track-search query))
+          (lookup-album (album-lookup query))
+          (lookup-artist (artist-lookup query))
+          (lookup-track (track-lookup query))
+          (otherwise (format t "Specify one of: '(album-search artist-search
 track-search album-lookup artist-lookup track-lookup)"))))
     (error (e) (print e))))
 
