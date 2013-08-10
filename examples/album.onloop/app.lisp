@@ -60,7 +60,7 @@
 	       (setf search-query t)
 	       (setf (symbol-function 's-search-html) (function cl-smaw::track-search-html))
 	       (setf (symbol-function 's-search) (function cl-smaw::track-search)))
-	      (t (error "Invalid URL."))))
+	      (t (error "Yeah, well, y'know, that's just like, uh, a bad URL, man."))))
 	  (handler-case
 	      (progn
 		(cond
@@ -81,11 +81,11 @@
 			 (format nil "~{~a~^<hr />~}"
 				 (mapcar #'s-search-html (s-search (first params))))
 			 (error ""))))))
-	    (error (e) (error "Not found."))))
+	    (error (e) (error "Something like that doesn't seem to exist on Spotify...<i>yet</i>."))))
       (error (e) e)))
   (response-template (:div :id "response" (who:str response))))
 
 (restas:define-route not-found ("*any")
-  (response-template (:div :id "response" "Invalid URL.")))
+  (response-template (:div :id "response" "Yeah, well, y'know, that's just like, uh, a bad URL, man.")))
 
 (restas:start '#:restas.album-onloop :port 8080)
