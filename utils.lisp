@@ -96,3 +96,17 @@
 (defun is-uri (input)
   "Scans string to check if Spotify URI."
   (and (ppcre:scan "^spotify:.+$" input) t))
+
+(defun string-split (string delim)
+  "Splits a string into substrings around the delimiter."
+  (loop for x = 0 then (1+ y)
+     as y = (position delim string :start x)
+     collect (subseq string x y)
+     while y))
+
+(defun get-type-and-id-from-uri (uri)
+  "Get the type of service (album/artist/track) and the ID of an URI."
+  (let ((split-list (string-split uri #\:)))
+    (list :uri uri
+	  :type (second split-list)
+	  :id (third split-list))))
