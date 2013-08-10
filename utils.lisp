@@ -58,7 +58,8 @@
           (album-lookup (album-lookup query))
           (artist-lookup (artist-lookup query))
           (track-lookup (track-lookup query))
-          (otherwise (format t "Specify one of: '(album-search artist-search track-search album-lookup artist-lookup track-lookup)"))))
+          (otherwise (format t "Specify one of: '(album-search artist-search 
+track-search album-lookup artist-lookup track-lookup)"))))
     (error (e) (print e))))
 
 (defun album-search (search-term)
