@@ -11,6 +11,5 @@
 	:serial t
 	:components
 	((:file "package")
-	 (:file "app")
-	 (:file "utils"))
+	 (:file "app"))
 	 :depends-on (restas cl-smaw cl-who))
