@@ -103,9 +103,9 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 
 (defun album-lookup-html (plist)
   (concatenate 'string
-	       "<div id='widget'>"
-	       (generate-embed-html (getf plist :href))
-	       "</div><hr />"
+	       (who:with-html-output-to-string (*standard-output* nil)
+		 (:div :id "widget" (who:str (generate-embed-html (getf plist :href))))
+		 (:hr))
 	       (entry :name plist) (list #\Newline)
 	       (entry :artist plist) (list #\Newline)
 	       (entry :artist-id plist) (list #\Newline)
@@ -114,18 +114,18 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 
 (defun artist-lookup-html (plist)
   (concatenate 'string
-	       "<div id='widget'>"
-	       (generate-embed-html (getf plist :href))
-	       "</div><hr />"
+	       (who:with-html-output-to-string (*standard-output* nil)
+		 (:div :id "widget" (who:str (generate-embed-html (getf plist :href))))
+		 (:hr))
 	       (entry :name plist) (list #\Newline)
 	       (entry :href plist) (list #\Newline)
 	       (string-from-plists :albums plist)  (list #\Newline)))
 
 (defun track-lookup-html (plist)
-  (concatenate 'string
-	       "<div id='widget'>"
-	       (generate-embed-html (getf plist :href))
-	       "</div><hr />"
+  (concatenate 'string	 
+	       (who:with-html-output-to-string (*standard-output* nil)
+		 (:div :id "widget" (who:str (generate-embed-html (getf plist :href))))
+		 (:hr))
 	       (entry :name plist) (list #\Newline)
 	       (entry :href plist) (list #\Newline)
 	       (entry :length plist) (list #\Newline)
