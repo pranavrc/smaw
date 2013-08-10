@@ -44,7 +44,7 @@
 		(setf (symbol-function 's-lookup-html) (function cl-smaw::track-lookup-html))
 		(setf (symbol-function 's-lookup) (function cl-smaw::track-lookup))
 		(setf (symbol-function 's-search) (function cl-smaw::track-search)))
-	       (t "Invalid URL.")))
+	       (t (error "Invalid URL."))))
 	   (if (cl-smaw::is-uri (first params))
 	       (s-lookup-html (s-lookup (first params)))
 	       (if (second params)
@@ -55,7 +55,7 @@
 		   (s-lookup-html
 		    (s-lookup (getf (first
 				     (s-search (first params))) :href))))))
-       (error (e) "Oops, something went wrong.")))))
+       (error (e) "Oops, something went wrong. Try again.")))))
 
 (restas:define-route not-found ("*any")
   (response-template (:div (who:str "Invalid URL."))))
