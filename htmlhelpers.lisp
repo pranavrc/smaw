@@ -45,7 +45,7 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 				  (who:with-html-output-to-string (*standard-output* nil)
 				    (:strong (who:str (string-capitalize category))))
 				  " "
-				  (if (eql category :href) ;;; Hack for album-onloop links.
+				  (if (member category '(:href :artist-id)) ;;; Hack for album-onloop links.
 				      (who:with-html-output-to-string (*standard-output* nil)
 					(:a :href (concatenate 'string
 							       "/"
