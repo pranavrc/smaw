@@ -1,6 +1,6 @@
 (in-package :cl-user)
 
-(defpackage :cl-smaw
+(defpackage :smaw
   (:use :cl :drakma :yason :cl-interpol :cl-who)
   (:export #:get-json-response
 		   #:construct-url

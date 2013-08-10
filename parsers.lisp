@@ -1,4 +1,4 @@
-(in-package :cl-smaw)
+(in-package :smaw)
 
 (defun album-search-parser (album-search-object)
   "Parses information from a JSON response for album queries."

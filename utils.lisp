@@ -1,4 +1,4 @@
-(in-package :cl-smaw)
+(in-package :smaw)
 
 (enable-interpol-syntax)
 

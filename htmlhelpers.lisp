@@ -1,4 +1,4 @@
-(in-package :cl-smaw)
+(in-package :smaw)
 
 (defun generate-embed-html (uri &key (width 300) (height 380))
   "Generate HTML markup for embedding spotify widgets."
