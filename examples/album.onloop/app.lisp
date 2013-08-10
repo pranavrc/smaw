@@ -25,11 +25,11 @@
 (restas:define-route favicon ("favicon.ico")
   (pathname "~/workbase/cl-smaw/examples/album.onloop/res/favicon.ico"))
 
-(restas:define-route query (":(type)/:(query)/l")
+(restas:define-route query (":(type)/:(query)")
   (response-template 
     (who:str
      (handler-case
-	 (let* ((params (album-onloop::string-split query #\!)))
+	 (let* ((params (cl-smaw::string-split query #\!)))
 	   (if (cl-smaw::is-uri (first params))
 	       (cond
 		 ((string= type "album") (cl-smaw::album-lookup-html (cl-smaw::album-lookup (first params))))
