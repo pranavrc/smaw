@@ -111,6 +111,9 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 
 (defun artist-lookup-html (plist)
   (concatenate 'string
+	       "<div id='widget'>"
+	       (generate-embed-html (getf plist :href))
+	       "</div><hr />"
 	       (entry :name plist) (list #\Newline)
 	       (entry :href plist) (list #\Newline)
 	       (string-from-plists :albums plist)  (list #\Newline)))
