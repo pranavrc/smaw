@@ -70,12 +70,6 @@ input {
 	text-shadow: hsla(0,0%,40%,0.5) 0 -1px 0, hsla(0,0%,100%,.6) 0 2px 1px;
 }
 
-pre {
-	font-size:11px;
-	text-align: left;
-	line-height: 150%;
-}
-
 a:link {
 	color: #800000;
 }
@@ -89,7 +83,7 @@ a:visited {
 	background-color: hsl(0,0%,90%);
 	padding: 35px;
 	border: 1px solid #999;
-	line-height: 50%;
+	line-height: 100%;
 	width: 70%;
 	-webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
 	-moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3);
