@@ -42,12 +42,20 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 	  (string-from-plist category plist))
       (who:with-html-output-to-string (*standard-output* nil)
 	(:p (who:str (concatenate 'string
-				  (who:with-html-output-to-string (*standard-output* nil) 
+				  (who:with-html-output-to-string (*standard-output* nil)
 				    (:strong (who:str (string-capitalize category))))
-				  " " 
-				  (if (typep (getf plist category) 'number)
-				      (write-to-string (getf plist category))
-				      (string (getf plist category)))))))))
+				  " "
+				  (if (eql category :href) ;;; Hack for album-onloop links.
+				      (who:with-html-output-to-string (*standard-output* nil)
+					(:a :href (concatenate 'string
+							       "/"
+							       (second (string-split 
+									(getf plist category) #\:))
+							       "/" (getf plist category))
+					    (who:str (getf plist category))))
+				      (if (typep (getf plist category) 'number)
+					  (write-to-string (getf plist category))
+					  (string (getf plist category))))))))))
 
 (defun string-from-plists (category plist)
   (concatenate 'string
