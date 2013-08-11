@@ -20,13 +20,13 @@
 	     (who:str ,@response))))))
 
 (restas:define-route main ("")
-  (pathname "~/workbase/smaw/res/index.html"))
+  (pathname "/home/vanharp/workbase/smaw/res/index.html"))
 
 (restas:define-route css ("index.css")
-  (pathname "~/workbase/smaw/res/index.css"))
+  (pathname "/home/vanharp/workbase/smaw/res/index.css"))
 
 (restas:define-route favicon ("favicon.ico")
-  (pathname "~/workbase/smaw/res/favicon.ico"))
+  (pathname "/home/vanharp/workbase/smaw/res/favicon.ico"))
 
 (restas:define-route album-lookup-route ("album/:(query)")
   (response-template
@@ -124,4 +124,4 @@
 (restas:define-route not-found ("*any")
   (response-template *invalid-url*))
 
-(restas:start '#:restas.this-onloop :port 8080)
+(restas:start '#:restas.this-onloop :port 8082)
