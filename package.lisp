@@ -1,7 +1,7 @@
 (in-package :cl-user)
 
 (defpackage :smaw
-  (:use :cl :drakma :yason :cl-interpol :cl-who)
+  (:use :cl :drakma :cl-json :cl-interpol :cl-who)
   (:export #:get-json-response
 		   #:construct-url
 		   #:make-plist

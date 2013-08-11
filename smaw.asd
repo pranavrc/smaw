@@ -14,4 +14,4 @@
    (:file "utils")
    (:file "parsers")
    (:file "htmlhelpers"))
-   :depends-on (drakma yason cl-interpol cl-who))
+   :depends-on (drakma cl-json cl-interpol cl-who))
