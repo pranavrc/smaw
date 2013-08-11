@@ -1,3 +1,4 @@
+;;; Deprecated module ;;;
 (in-package :smaw)
 
 (defun album-search-parser (album-search-object)
