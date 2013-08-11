@@ -13,5 +13,6 @@
   ((:file "package")
    (:file "utils")
    (:file "parsers")
-   (:file "htmlhelpers"))
-   :depends-on (drakma cl-json cl-interpol cl-who))
+   (:file "htmlhelpers")
+   (:file "this-onloop"))
+   :depends-on (drakma cl-json cl-interpol restas cl-who))

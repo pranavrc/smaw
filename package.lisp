@@ -37,4 +37,10 @@
 		   #:markup-plist
 		   #:entry
 		   #:string-from-plists
-		   #:string-from-plist))
+		   #:string-from-plist
+		   #:album-search-html
+		   #:album-lookup-html
+		   #:artist-search-html
+		   #:artist-lookup-html
+		   #:track-search-html
+		   #:track-lookup-html))
