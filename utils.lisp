@@ -3,11 +3,10 @@
 (enable-interpol-syntax)
 
 (defun get-json-response (url)
-  (parse
-   (http-request url
-                 :method :get
-                 :preserve-uri t
-                 :want-stream t)))
+  (json:decode-json
+   (drakma:http-request url
+			:method :get
+			:want-stream t)))
 
 (defun construct-url (url-type parameters &optional (type "track"))
   (let* ((encoded-parameters (url-encode parameters :utf-8))
@@ -63,36 +62,22 @@ track-search album-lookup artist-lookup track-lookup)"))))
     (error (e) (print e))))
 
 (defun album-search (search-term)
-  (mapcar #'(lambda (each) (album-search-parser each))
-          (gethash "albums"
-                   (get-json-response (construct-url 'search search-term "album")))))
+  (cdr (second (get-json-response (construct-url 'search search-term "album")))))
 
 (defun album-lookup (lookup-term)
-  (album-lookup-parser (gethash "album"
-                                (get-json-response
-                                 (construct-url 'album-lookup lookup-term "album")))))
+  (cdr (first (get-json-response (construct-url 'album-lookup lookup-term "album")))))
 
 (defun artist-search (search-term)
-  (mapcar #'(lambda (each) (artist-search-parser each))
-          (gethash "artists"
-                   (get-json-response
-                    (construct-url 'search search-term "artist")))))
+  (cdr (second (get-json-response (construct-url 'search search-term "artist")))))
 
-(defun artist-lookup (lookup-term)
-  (artist-lookup-parser (gethash "artist"
-                                 (get-json-response
-                                  (construct-url 'artist-lookup lookup-term "artist")))))
+(defun artist-lookup (lookup-term) 
+  (cdr (second (get-json-response (construct-url 'artist-lookup lookup-term "artist")))))
 
 (defun track-search (search-term)
-  (mapcar #'(lambda (each) (track-search-parser each))
-          (gethash "tracks"
-                   (get-json-response
-                    (construct-url 'search search-term)))))
+  (cdr (second (get-json-response (construct-url 'search search-term)))))
 
 (defun track-lookup (lookup-term)
-  (track-lookup-parser (gethash "track"
-                                (get-json-response
-                                 (construct-url 'track-lookup lookup-term)))))
+  (cdr (first (get-json-response (construct-url 'track-lookup lookup-term)))))
 
 (defun is-uri (input)
   "Scans string to check if Spotify URI."
