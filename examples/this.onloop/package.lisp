@@ -1,4 +1,4 @@
 (in-package :cl-user)
 
-(defpackage :album-onloop
+(defpackage :this-onloop
   (:use :cl :smaw :cl-who))

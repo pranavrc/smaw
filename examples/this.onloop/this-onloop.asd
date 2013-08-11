@@ -1,10 +1,10 @@
-(defpackage #:album-onloop-system
+(defpackage #:this-onloop-system
 	(:use :cl :asdf))
 
-(in-package :album-onloop-system)
+(in-package :this-onloop-system)
 
-(defsystem album-onloop
-	:name "album.onloop"
+(defsystem this-onloop
+	:name "this.onloop"
 	:author "Pranav Ravichandran"
 	:description "Proof of concept app for smaw, and an extension to http://album.onloop.net/"
 	:license "MIT"

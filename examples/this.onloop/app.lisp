@@ -1,6 +1,6 @@
-(restas:define-module :restas.album-onloop (:use :cl :album-onloop))
+(restas:define-module :restas.this-onloop (:use :cl :this-onloop))
 
-(in-package :restas.album-onloop)
+(in-package :restas.this-onloop)
 
 (restas:debug-mode-on)
 (setf (who:html-mode) :html5)
@@ -12,7 +12,7 @@
      (:html
       (:head
        (:meta :charset "utf-8")
-       (:title "album.onloop")
+       (:title "Here you go.")
        (:link :rel "stylesheet" :href (restas:genurl 'css))
        (:link :rel "shortcut icon" :type "image/x-icon" :href (restas:genurl 'favicon)))
       (:body
@@ -20,13 +20,13 @@
 	     (who:str ,@response))))))
 
 (restas:define-route main ("")
-  (pathname "~/workbase/smaw/examples/album.onloop/res/index.html"))
+  (pathname "~/workbase/smaw/examples/this.onloop/res/index.html"))
 
 (restas:define-route css ("index.css")
-  (pathname "~/workbase/smaw/examples/album.onloop/res/index.css"))
+  (pathname "~/workbase/smaw/examples/this.onloop/res/index.css"))
 
 (restas:define-route favicon ("favicon.ico")
-  (pathname "~/workbase/smaw/examples/album.onloop/res/favicon.ico"))
+  (pathname "~/workbase/smaw/examples/this.onloop/res/favicon.ico"))
 
 (restas:define-route album-lookup-route ("album/:(query)")
   (response-template
@@ -38,11 +38,12 @@
 		(if (second params)
 		    (smaw::album-lookup-html
 		     (smaw:album-lookup 
-		      (getf (nth (- (parse-integer (second params)) 1)
-				 (smaw:album-search (first params))) :href)))
+		      (cdr (assoc :href (nth (- (parse-integer (second params)) 1)
+					     (smaw:album-search (first params)))))))
 		    (smaw::album-lookup-html
-		     (smaw:album-lookup (getf (first
-					       (smaw:album-search (first params))) :href)))))))
+		     (smaw:album-lookup (cdr (assoc :href (first
+							   (smaw:album-search 
+							    (first params)))))))))))
       (error (e) *not-found*))))
 
 (restas:define-route artist-lookup-route ("artist/:(query)")
@@ -55,11 +56,12 @@
 		(if (second params)
 		    (smaw::artist-lookup-html
 		     (smaw:artist-lookup 
-		      (getf (nth (- (parse-integer (second params)) 1)
-				 (smaw:artist-search (first params))) :href)))
+		      (cdr (assoc :href (nth (- (parse-integer (second params)) 1)
+					     (smaw:artist-search (first params)))))))
 		    (smaw::artist-lookup-html
-		     (smaw:artist-lookup (getf (first
-						(smaw:artist-search (first params))) :href)))))))
+		     (smaw:artist-lookup (cdr (assoc :href (first
+							    (smaw:artist-search
+							     (first params)))))))))))
       (error (e) *not-found*))))
 
 (restas:define-route track-lookup-route ("track/:(query)")
@@ -72,11 +74,12 @@
 		(if (second params)
 		    (smaw::track-lookup-html
 		     (smaw:track-lookup 
-		      (getf (nth (- (parse-integer (second params)) 1)
-				 (smaw:track-search (first params))) :href)))
+		      (cdr (assoc :href (nth (- (parse-integer (second params)) 1)
+					     (smaw:track-search (first params)))))))
 		    (smaw::track-lookup-html
-		     (smaw:track-lookup (getf (first
-					       (smaw:track-search (first params))) :href)))))))
+		     (smaw:track-lookup (cdr (assoc :href (first
+							   (smaw:track-search
+							    (first params)))))))))))
       (error (e) *not-found*))))
 
 (restas:define-route album-search-route ("albums/:(query)")
@@ -121,4 +124,4 @@
 (restas:define-route not-found ("*any")
   (response-template *invalid-url*))
 
-(restas:start '#:restas.album-onloop :port 8080)
+(restas:start '#:restas.this-onloop :port 8080)
