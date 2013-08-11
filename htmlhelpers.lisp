@@ -36,8 +36,8 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 	 (:i (who:str value)))))
 
 (defun entry (category plist)
-  (if (typep (getf plist category) 'list)
-      (if (typep (first (getf plist category)) 'list)
+  (if (typep (cdr (assoc category plist)) 'list)
+      (if (typep (first (cadr (assoc category plist))) 'list)
 	  (string-from-plists category plist)
 	  (string-from-plist category plist))
       (who:with-html-output-to-string (*standard-output* nil)
@@ -50,12 +50,12 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 					(:a :href (concatenate 'string
 							       "/"
 							       (second (string-split 
-									(getf plist category) #\:))
-							       "/" (getf plist category))
-					    (who:str (getf plist category))))
-				      (if (typep (getf plist category) 'number)
-					  (write-to-string (getf plist category))
-					  (string (getf plist category))))))))))
+									(cdr (assoc category plist)) #\:))
+							       "/" (cdr (assoc category plist)))
+					    (who:str (cdr (assoc category plist)))))
+				      (if (typep (cdr (assoc category plist)) 'number)
+					  (write-to-string (cdr (assoc category plist)))
+					  (string (cdr (assoc category plist)))))))))))
 
 (defun string-from-plists (category plist)
   (concatenate 'string
@@ -63,13 +63,13 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 		 (:strong (who:str (string-capitalize category)))
 		 (:br))
 	       (with-output-to-string (s)
-		 (loop for each-plist in (getf plist category) do
+		 (loop for each-plist in (cdr (assoc category plist)) do
 		      (format s
 			      (who:with-html-output-to-string (*standard-output* nil)
 				(:div :id "inner"
 				      (who:str (with-output-to-string (d)
-						 (loop for (key value) on each-plist by #'cddr do
-						      (format d (entry key each-plist))))))))))))
+						 (loop for sub-list in each-plist do
+						      (format d (entry (first sub-list) each-plist))))))))))))
 
 (defun string-from-plist (category plist)
   (who:with-html-output-to-string (*standard-output* nil)
@@ -78,9 +78,10 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
     (:div :id "inner"
 	  (who:str 
 	   (with-output-to-string (s)
-	     (loop for (key value) on (getf plist category) by #'cddr
+	     (loop for each-list in (cdr (assoc category plist))
 		do (format s
-			   (entry key (getf plist category)))))))
+			   (entry (car each-list)
+				  (cdr (assoc category plist))))))))
     (:br)))
 
 (defun album-search-html (plist)
@@ -112,7 +113,7 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 (defun album-lookup-html (plist)
   (concatenate 'string
 	       (who:with-html-output-to-string (*standard-output* nil)
-		 (:div :id "widget" (who:str (generate-embed-html (getf plist :href))))
+		 (:div :id "widget" (who:str (generate-embed-html (cdr (assoc :href plist)))))
 		 (:hr))
 	       (entry :name plist) (list #\Newline)
 	       (entry :artist plist) (list #\Newline)
@@ -123,7 +124,7 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 (defun artist-lookup-html (plist)
   (concatenate 'string
 	       (who:with-html-output-to-string (*standard-output* nil)
-		 (:div :id "widget" (who:str (generate-embed-html (getf plist :href))))
+		 (:div :id "widget" (who:str (generate-embed-html (cdr (assoc :href plist)))))
 		 (:hr))
 	       (entry :name plist) (list #\Newline)
 	       (entry :href plist) (list #\Newline)
@@ -132,7 +133,7 @@ frameborder=\"0\" allowtransparency=\"true\"></iframe>" uri width height))
 (defun track-lookup-html (plist)
   (concatenate 'string	 
 	       (who:with-html-output-to-string (*standard-output* nil)
-		 (:div :id "widget" (who:str (generate-embed-html (getf plist :href))))
+		 (:div :id "widget" (who:str (generate-embed-html (cdr (assoc :href plist)))))
 		 (:hr))
 	       (entry :name plist) (list #\Newline)
 	       (entry :href plist) (list #\Newline)
