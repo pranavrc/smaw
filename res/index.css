@@ -3,6 +3,10 @@ body {
 	line-height: 150%;
 }
 
+p {
+	background: url('');
+}
+
 #description {
 	margin: auto;
 	/*width: 60%;*/
